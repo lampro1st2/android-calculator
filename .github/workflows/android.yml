@@ -8,7 +8,7 @@ on:
 
 jobs:
   ui_tests:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     timeout-minutes: 30
 
     steps:
@@ -41,24 +41,14 @@ jobs:
       - name: Build and Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: Install Emulator and System Image
-        run: |
-          sdkmanager --install "system-images;android-30;google_apis;x86_64" "emulator"
-          avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" -d pixel
-
-      - name: Start Emulator
-        run: |
-          nohup emulator -avd test -no-snapshot -no-window -gpu swiftshader_indirect > /dev/null 2>&1 &
-          adb wait-for-device
-          adb shell settings put global window_animation_scale 0
-          adb shell settings put global transition_animation_scale 0
-          adb shell settings put global animator_duration_scale 0
-
-      - name: Run Instrumented Tests
-        run: ./gradlew connectedCheck
+      - name: Run Instrumented UI Tests on Emulator
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          profile: pixel
+          script: ./gradlew connectedCheck
 
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
