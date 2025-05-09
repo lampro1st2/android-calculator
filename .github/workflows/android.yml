@@ -45,16 +45,8 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Start Android Emulator and Run Instrumented Tests
-        uses: android-actions/run-androidTests@v3
-        with:
-          targets: 'emulator' # Chạy trên emulator
-          emulator-api-level: '30' # Chọn API level phù hợp
-          emulator-arch: 'x86_64' # Chọn kiến trúc phù hợp
-          emulator-profile: 'pixel_3' # Chọn profile emulator
-          emulator-cores: 4 # Số core cho emulator
-          emulator-memory: '4096M' # Dung lượng RAM cho emulator
-          gradle-task: connectedCheck # Lệnh Gradle để chạy UI tests
-          timeout-minutes: 10 # Timeout cho việc chạy UI tests
+        uses: vgaidarji/android-github-actions-emulator@v1.0.1
+
 
       - name: Upload Test Reports
         uses: actions/upload-artifact@v3
