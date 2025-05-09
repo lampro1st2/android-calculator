@@ -18,7 +18,7 @@ public class CalculationLogicTest {
     //--- Test cho hàm add ---
     @Test
     public void add_twoPositiveNumbers_returnsCorrectSum() {
-        assertEquals("5 + 3 should be 8", 8, calculator.add(5, 3));
+        assertEquals("5 + 3 should be 8", 8, calculator.add(5, 4));
     }
 
     @Test
