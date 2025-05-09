@@ -45,7 +45,7 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Start Android Emulator and Run Instrumented Tests
-        uses: vgaidarji/android-github-actions-emulator@v1.0.1
+        uses: ReactiveCircus/android-emulator-runner@v2
 
 
       - name: Upload Test Reports
