@@ -9,7 +9,7 @@ on:
 jobs:
   ui_tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 30 # Tăng timeout nếu cần thiết
+    timeout-minutes: 30
 
     steps:
       - name: Checkout code
@@ -41,23 +41,29 @@ jobs:
       - name: Build and Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Set up Android Emulator
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Start Android Emulator and Run Instrumented Tests
-        uses: ReactiveCircus/android-emulator-runner@v2
-        with:
-          api-level: 30
-          target: google_apis
-          arch: x86_64
-          profile: pixel
-          script: ./gradlew connectedCheck
+      - name: Install Emulator and System Image
+        run: |
+          sdkmanager --install "system-images;android-30;google_apis;x86_64" "emulator"
+          avdmanager create avd -n test -k "system-images;android-30;google_apis;x86_64" -d pixel
 
+      - name: Start Emulator
+        run: |
+          nohup emulator -avd test -no-snapshot -no-window -gpu swiftshader_indirect > /dev/null 2>&1 &
+          adb wait-for-device
+          adb shell settings put global window_animation_scale 0
+          adb shell settings put global transition_animation_scale 0
+          adb shell settings put global animator_duration_scale 0
+
+      - name: Run Instrumented Tests
+        run: ./gradlew connectedCheck
 
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         if: always()
         with:
           name: ui-test-reports
-          path: app/build/outputs/androidTest/connected/*
+          path: app/build/outputs/androidTest/connected/
           retention-days: 7
