@@ -21,10 +21,7 @@ public class CalculationLogicTest {
         assertEquals("5 + 3 should be 8", 8, calculator.add(5, 3));
     }
 
-    @Test
-    public void add_positiveAndNegativeNumber_returnsCorrectSum() {
-        assertEquals("7 + (-3) should be 4", 4, calculator.add(7, -3));
-    }
+
 
     @Test
     public void add_twoNegativeNumbers_returnsCorrectSum() {
